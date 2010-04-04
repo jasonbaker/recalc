@@ -1,0 +1,63 @@
+PIPE = '|'
+LPAREN = '('
+RPAREN = ')'
+LBRACKET = '['
+RBRACKET = ']'
+LBRACE = '{'
+RBRACE = '}'
+DIGIT = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+LETTER = "a" | ... | "z" | "A" | ... | "Z"
+USCORE = "_"
+WSPACE = " " | "\n" | "\r\n" | "\t"
+EQUAL = "=" | "=="
+ASSIGN = ":="
+LTHAN = "<"
+LEQUAL = "<="
+GTHAN = ">"
+GEQUAL = ">="
+NEQUAL = "!="
+TRUE = "true"
+FALSE = "false"
+
+number = DIGIT, {DIGIT}
+(* somewhat naive *)
+string = '"' (<any> - '"') '"'
+       | "'" (<any> - "'") "'"
+name = (USCORE | LETTER), {USCORE, LETTER, DIGIT}
+scalar = number | string
+tuple-lit = LPAREN {name, ASSIGN, expression} RPAREN
+relation-lit = LBRACE {tuple-lit} RBRACE
+relation = relation-lit
+         | LBRACE query RBRACE
+         | variable
+expression = query 
+           | scalar
+           | LPAREN expression RPAREN
+           | variable
+           | formula
+           | expression; {expression;}
+           | expression; {expression;} expression
+           | relation
+           | if-then-else
+           | function
+           | funcall
+assignment = variable ASSIGN expression
+variable = name
+query = projection PIPE formula
+projection = LPAREN {name} RPAREN
+logical-operator = EQUAL | LTHAN | LEQUAL | GTHAN | GEQUAL | NEQUAL
+formula = TRUE | FALSE
+        | LPAREN formula RPAREN
+        | variable
+        | expression logical-operator expression
+        | formula 'and' formula
+        | formula 'or' formula
+        | 'not' formula
+        | variable 'in' relation
+        | exists name {, name} LPAREN formula RPAREN
+        | forall name {, name} LPAREN formula RPAREN
+if-then-else = 'if' boolean-expr 'then' expression
+              {'elif' formula 'then' expression}
+              ['else' expression]
+function = 'func' '[' {name} ']' expression
+funcall = variable {expression}
