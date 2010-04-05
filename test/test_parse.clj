@@ -3,5 +3,5 @@
         recalc.parse))
 
 (deftest num_test
-  (is (=  (parse number "12") 12)))
+  (is (=  (parse int-lit "12") 12)))
   

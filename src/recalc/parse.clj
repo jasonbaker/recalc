@@ -49,7 +49,7 @@
 
 (def apply-str (partial apply str))
 
-(def number
+(def int-lit
      (complex [num (rep* digit)]
               (-> num
                   (apply-str)
