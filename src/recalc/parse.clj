@@ -66,6 +66,9 @@
                   (apply-str)
                   Double/parseDouble)))
 
+(def number 
+     (alt float-lit int-lit))
+
 (defn parse [rule tokens]
   (rule-match rule
               #(println "FAILED:  " %)
