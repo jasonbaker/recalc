@@ -44,6 +44,17 @@
      (constant-semantics (lit-conc-seq "true" nb-char-lit)
                          (make-scalar-node true)))
 
+(def lcase-letters
+     (lit-alt-seq
+      "abcdefghijklmnopqrstuvwxyz"))
+
+(def ucase-letters
+     (lit-alt-seq
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+
+(def letters
+     (alt lcase-letters ucase-letters))
+
 (def decimal-point
      (nb-char-lit \.))
 
@@ -68,6 +79,8 @@
 
 (def number 
      (alt float-lit int-lit))
+
+
 
 (defn parse [rule tokens]
   (rule-match rule
