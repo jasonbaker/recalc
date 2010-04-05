@@ -3,4 +3,4 @@
   (:use recalc.parse))
 
 (defn -main [& args]
-  (println "Hello, world!"))
+  (println (parse "01")))
