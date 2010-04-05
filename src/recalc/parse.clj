@@ -44,6 +44,9 @@
      (constant-semantics (lit-conc-seq "true" nb-char-lit)
                          (make-scalar-node true)))
 
+(def decimal-point
+     (nb-char-lit \.))
+
 (def digit
      (lit-alt-seq "0123456789" nb-char-lit))
 
@@ -54,7 +57,14 @@
               (-> num
                   (apply-str)
                   Integer/parseInt)))
-              
+            
+(def float-lit
+     (complex [whole int-lit
+               _ decimal-point
+               real int-lit]
+              (-> [whole "." real]
+                  (apply-str)
+                  Double/parseDouble)))
 
 (defn parse [rule tokens]
   (rule-match rule
