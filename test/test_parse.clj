@@ -8,3 +8,6 @@
   (is (= (parse number "12") 12))
   (is (= (parse number "12.2") 12.2)))
   
+(deftest letter_test
+  (is (= (parse letter "a") \a))
+  (is (= (parse identifier "abc123") "abc123")))

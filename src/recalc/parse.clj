@@ -44,22 +44,32 @@
      (constant-semantics (lit-conc-seq "true" nb-char-lit)
                          (make-scalar-node true)))
 
-(def lcase-letters
+(def lcase-letter
      (lit-alt-seq
-      "abcdefghijklmnopqrstuvwxyz"))
+      "abcdefghijklmnopqrstuvwxyz" nb-char-lit))
 
-(def ucase-letters
+(def ucase-letter
      (lit-alt-seq
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ" nb-char-lit))
 
-(def letters
-     (alt lcase-letters ucase-letters))
+(def letter
+     (alt lcase-letter ucase-letter))
 
-(def decimal-point
-     (nb-char-lit \.))
+(def uscore
+     (nb-char-lit "_"))
 
 (def digit
      (lit-alt-seq "0123456789" nb-char-lit))
+
+(def identifier
+     (complex [fchar (alt letter uscore)
+               others (rep* (alt letter uscore digit))]
+              (->> [ fchar others ]
+                   (apply cons)
+                   (apply str))))
+
+(def decimal-point
+     (nb-char-lit \.))
 
 (def apply-str (partial apply str))
 
