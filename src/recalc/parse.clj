@@ -20,6 +20,9 @@
 (def make-query-node
      (partial make-node :query))
 
+(def make-variable-node 
+     (partial make-node :variable))
+
 (def apply-str
      (partial apply str))
 
@@ -66,7 +69,8 @@
                others (rep* (alt letter uscore digit))]
               (->> [ fchar others ]
                    (apply cons)
-                   (apply str))))
+                   (apply str)
+		   make-variable-node)))
 
 (def decimal-point
      (nb-char-lit \.))
@@ -77,15 +81,17 @@
      (complex [num (rep* digit)]
               (-> num
                   (apply-str)
-                  Integer/parseInt)))
+                  Integer/parseInt
+		  make-scalar-node)))
             
 (def float-lit
      (complex [whole int-lit
                _ decimal-point
                real int-lit]
-              (-> [whole "." real]
+              (-> [(:content whole) "." (:content real)]
                   (apply-str)
-                  Double/parseDouble)))
+                  Double/parseDouble
+		  make-scalar-node)))
 
 (def number 
      (alt float-lit int-lit))
