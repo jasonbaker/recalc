@@ -10,4 +10,5 @@
   
 (deftest letter_test
   (is (= (parse letter "a") \a))
-  (is (= (:content (parse identifier "abc123")) "abc123")))
+  (is (= (:content (parse identifier "abc123")) "abc123"))
+  (is (= (:kind (parse identifier "abc123")) :variable)))
