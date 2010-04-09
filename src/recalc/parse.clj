@@ -21,6 +21,9 @@
 (def make-query-node
      (partial make-node :query))
 
+(def make-projection-node
+     (partial make-node :projection))
+
 (def make-variable-node 
      (partial make-node :variable))
 
@@ -100,7 +103,10 @@
 (def number 
      (alt float-lit int-lit))
 
-
+(def projection
+     (complex [ ids (rep+ identifier) ]
+              (make-projection-node 
+               (map :content ids))))
 
 (defn parse [rule tokens]
   (rule-match rule
