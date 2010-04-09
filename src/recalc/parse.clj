@@ -41,6 +41,18 @@
 
 ;; Terminal tokens
 
+(def space (nb-char-lit \space))
+
+(def tab (nb-char-lit \tab))
+
+(def newline-lit (lit \newline))
+
+(def return-lit (lit \return))
+
+(def line-break (b-char (rep+ (alt newline-lit return-lit))))
+
+(def ws (constant-semantics (rep* (alt space tab line-break)) :ws))
+
 (def pipe
      (nb-char-lit "|"))
 
@@ -72,8 +84,10 @@
 ;; Nonterminals
 
 (def identifier
-     (complex [fchar (alt letter uscore)
-               others (rep* (alt letter uscore digit))]
+     (complex [_ (opt ws)
+               fchar (alt letter uscore)
+               others (rep* (alt letter uscore digit))
+               _ (opt ws)]
               (->> [ fchar others ]
                    (apply cons)
                    (apply str)
@@ -104,9 +118,11 @@
      (alt float-lit int-lit))
 
 (def projection
-     (complex [ ids (rep+ identifier) ]
+     (complex [first-id identifier 
+               _ ws
+               other-ids (rep* identifier) ]
               (make-projection-node 
-               (map :content ids))))
+               (map :content (cons first-id other-ids)))))
 
 (defn parse [rule tokens]
   (rule-match rule

@@ -16,4 +16,5 @@
   (is (= (:kind (parse identifier "abc123")) :variable)))
 
 (deftest projection_test
-  (is (= (:content (parse projection "foo")) ["foo"])))
+  (is (= (:content (parse projection "foo")) ["foo"]))
+  (is (= (:content (parse projection "foo bar baz")) ["foo" "bar" "baz"])))
