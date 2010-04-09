@@ -1,6 +1,7 @@
 (ns recalc.parse
   (:use name.choi.joshua.fnparse
-        clojure.contrib.error-kit))
+        clojure.contrib.error-kit
+        recalc.util))
 
 ; A recalc node that will be returned
 (defstruct node-s :kind :content)
@@ -23,9 +24,6 @@
 (def make-variable-node 
      (partial make-node :variable))
 
-(def apply-str
-     (partial apply str))
-
 ;; These two functions are given a rule and make it so that it
 ;; increments the current column (or the current line).
 
@@ -38,6 +36,10 @@
 (defn- b-char [subrule]
   (invisi-conc subrule (update-info :line inc)))
 
+;; Terminal tokens
+
+(def pipe
+     (nb-char-lit "|"))
 
 (def false-lit
      (constant-semantics (lit-conc-seq "false" nb-char-lit)
@@ -64,6 +66,8 @@
 (def digit
      (lit-alt-seq "0123456789" nb-char-lit))
 
+;; Nonterminals
+
 (def identifier
      (complex [fchar (alt letter uscore)
                others (rep* (alt letter uscore digit))]
@@ -75,7 +79,7 @@
 (def decimal-point
      (nb-char-lit \.))
 
-(def apply-str (partial apply str))
+
 
 (def int-lit
      (complex [num (rep* digit)]
