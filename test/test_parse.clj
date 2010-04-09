@@ -18,3 +18,7 @@
 (deftest projection_test
   (is (= (:content (parse projection "foo")) ["foo"]))
   (is (= (:content (parse projection "foo bar baz")) ["foo" "bar" "baz"])))
+
+(deftest expression_test
+  (is (= (:content (parse expression "1")) 1))
+  (is (= (:content (parse expression "asdf ")) "asdf")))

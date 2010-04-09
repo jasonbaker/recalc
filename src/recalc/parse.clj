@@ -27,6 +27,9 @@
 (def make-variable-node 
      (partial make-node :variable))
 
+(def make-operator-node
+     (partial make-node :operator))
+
 ;; These two functions are given a rule and make it so that it
 ;; increments the current column (or the current line).
 
@@ -84,10 +87,10 @@
 ;; Nonterminals
 
 (def identifier
-     (complex [_ (opt ws)
+     (complex [_ (rep* ws)
                fchar (alt letter uscore)
                others (rep* (alt letter uscore digit))
-               _ (opt ws)]
+               _ (rep* ws)]
               (->> [ fchar others ]
                    (apply cons)
                    (apply str)
@@ -123,6 +126,9 @@
                other-ids (rep* identifier) ]
               (make-projection-node 
                (map :content (cons first-id other-ids)))))
+
+(def expression
+     (alt identifier number))
 
 (defn parse [rule tokens]
   (rule-match rule
